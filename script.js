@@ -122,9 +122,6 @@ class Score {
   }
 
   update() {
-    if (this.score % 100 === 0) {
-      point.play();
-    }
     increment = setInterval(() => {
       ++this.score;
     }, 100);
