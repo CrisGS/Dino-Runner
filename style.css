@@ -1,0 +1,16 @@
+canvas {
+  position: absolute;
+}
+
+.header {
+  text-align: center;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  user-select: none;
+  touch-action: none;
+}
