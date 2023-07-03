@@ -8,6 +8,10 @@ let velocityY = 0;
 let gravity = 0.8;
 let gameOver = false;
 let increment, cacti = [];
+const standingStillImage = new Image();
+standingStillImage.src = "dino1.png";
+const obsImg = new Image();
+obsImg.src = 'cactus_1.png';
 
 
 myFont.load().then(function(font){
@@ -20,15 +24,13 @@ class Player {
     this.y = canvas.height - 50;
     this.w = 50;
     this.h = 50;
+    this.img = standingStillImage;
   }
-
   draw() {
-    const playerImg = new Image();
-    playerImg.src = 'dino1.png';
-    ctx.drawImage(playerImg, this.x, this.y, this.w, this.h);
+    ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
   }
 
-  update() {
+  jump() {
     if (isJumping) {
       this.y -= 5;
       velocityY = -5;
@@ -56,8 +58,6 @@ class Obstacles {
   }
 
   draw() {
-    const obsImg = new Image();
-    obsImg.src = 'cactus_1.png';
     ctx.drawImage(obsImg,this.x, this.y, this.w, this.h);
   }
 
@@ -73,10 +73,6 @@ class Obstacles {
   }
 }
 
-function getRandomNumber(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
-
 function generateCacti() {
   setInterval(() => {
     obstacle = new Obstacles();
@@ -84,16 +80,12 @@ function generateCacti() {
   }, 4000);
 }
 
-
-
 class Ground {
+  speed = -3;
   constructor() {
     this.xPos = 0;
     this.yPos = canvas.height - 24;
   }
-
-  speed = -3;
-  
   drawGround() {
     const groundImg = new Image();
     groundImg.src = 'ground.png';
@@ -135,15 +127,13 @@ document.addEventListener('keydown', function (event) {
   }
 });
 
-
-
 function gameLoop() {
   if (!gameOver) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'rgb(247, 247, 247)';
     ctx.fillRect(0,0,canvas.width, canvas.height);
     dino.draw();
-    dino.update();
+    dino.jump();
     cacti.forEach((cactus) => {
       if (cactus.x < 0) {
         cacti.splice(0, 1);
@@ -155,7 +145,6 @@ function gameLoop() {
     ground.drawGround();
     ground.move();
     score.draw();
-    //console.log(cacti);
     requestAnimationFrame(gameLoop);
   } else {
     ctx.font = "30px myFont";
@@ -170,6 +159,13 @@ let obstacle = new Obstacles();
 let ground = new Ground();
 let dino = new Player();
 let score = new Score();
-score.update();
-gameLoop();
-generateCacti()
+
+ctx.fillStyle = 'rgb(247, 247, 247)';
+ctx.fillRect(0,0,canvas.width, canvas.height);
+
+function startGame() {
+  gameLoop();
+  generateCacti();
+  score.update();
+  document.getElementById('playButton').style.display = 'none';
+}
