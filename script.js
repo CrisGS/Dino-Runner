@@ -121,12 +121,22 @@ class Score {
 }
 
 document.addEventListener('keydown', function (event) {
-  if (event.keyCode === 38 && !isJumping) {
+  if ((event.keyCode === 38 || event.keyCode === 32) && !isJumping) {
     isJumping = true;
     jump.play();
   }
 });
 
+function addButton() {
+  let replayBtn = document.createElement("button");
+  replayBtn.id = "replayButton";
+  replayBtn.classList.add("replayButton");
+  replayBtn.innerText = "Play again";
+  replayBtn.addEventListener('click', () => {
+    location.reload();
+  });
+  document.body.appendChild(replayBtn);
+}
 function gameLoop() {
   if (!gameOver) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -151,7 +161,8 @@ function gameLoop() {
     ctx.fillStyle = "grey";
     ctx.textAlign="center"
     ctx.textBaseline='middle';
-    ctx.fillText("Game Over!", canvas.width/ 2, canvas.height / 2);
+    ctx.fillText("Game Over!", canvas.width/ 2, (canvas.height / 2) - 30);
+    addButton();
   }
 }
 
