@@ -12,6 +12,11 @@ const standingStillImage = new Image();
 standingStillImage.src = "dino1.png";
 const obsImg = new Image();
 obsImg.src = 'cactus_1.png';
+const obsImg2 = new Image();
+obsImg.src = 'cactus_1.png';
+const obsImg3 = new Image();
+obsImg.src = 'cactus_1.png';
+let generateCactiInterval;
 
 
 myFont.load().then(function(font){
@@ -19,6 +24,7 @@ myFont.load().then(function(font){
 });
 
 class Player {
+
   constructor () {
     this.x = 10;
     this.y = canvas.height - 50;
@@ -26,6 +32,7 @@ class Player {
     this.h = 50;
     this.img = standingStillImage;
   }
+
   draw() {
     ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
   }
@@ -50,14 +57,25 @@ class Player {
 }
 
 class Obstacles {
+
   constructor() {
     this.x = canvas.width + 50;
     this.y = canvas.height - 50;
-    this.w = 25;
+    this.w = 35;
     this.h = 50;
+    this.cactusType = Math.floor(Math.random() * (3 - 1 + 1) + 1);
   }
 
   draw() {
+    if (this.cactusType === 1) {
+      obsImg.src = 'cactus_1.png';
+    } else if (this.cactusType === 2) {
+      obsImg.src = 'cactus_2.png';
+      this.w = 60;
+    } else {
+      obsImg.src = 'cactus_3.png';
+      this.w = 60;
+    }
     ctx.drawImage(obsImg,this.x, this.y, this.w, this.h);
   }
 
@@ -73,11 +91,14 @@ class Obstacles {
   }
 }
 
-function generateCacti() {
-  setInterval(() => {
+function generateCacti(min, max) {
+  let time = Math.floor(Math.random() * (max - min + 1) + min);
+  generateCactiInterval = setInterval(() => {
     obstacle = new Obstacles();
+    console.log(obstacle.cactusType)
     cacti.push(obstacle);
-  }, 4000);
+    console.log(cacti);
+  }, time);
 }
 
 class Ground {
@@ -86,6 +107,7 @@ class Ground {
     this.xPos = 0;
     this.yPos = canvas.height - 24;
   }
+
   drawGround() {
     const groundImg = new Image();
     groundImg.src = 'ground.png';
@@ -137,6 +159,7 @@ function addButton() {
   });
   document.body.appendChild(replayBtn);
 }
+
 function gameLoop() {
   if (!gameOver) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -145,13 +168,13 @@ function gameLoop() {
     dino.draw();
     dino.jump();
     cacti.forEach((cactus) => {
-      if (cactus.x < 0) {
+      if (cactus.x < -10) {
         cacti.splice(0, 1);
       }
-    })
-    obstacle.draw();
-    obstacle.move();
-    obstacle.collideWith(dino);
+      cactus.draw();
+      cactus.move();
+      cactus.collideWith(dino);
+    });
     ground.drawGround();
     ground.move();
     score.draw();
@@ -163,6 +186,7 @@ function gameLoop() {
     ctx.textBaseline='middle';
     ctx.fillText("Game Over!", canvas.width/ 2, (canvas.height / 2) - 30);
     addButton();
+    clearInterval(generateCactiInterval);
   }
 }
 
@@ -176,7 +200,7 @@ ctx.fillRect(0,0,canvas.width, canvas.height);
 
 function startGame() {
   gameLoop();
-  generateCacti();
+  generateCacti(900, 3000);
   score.update();
   document.getElementById('playButton').style.display = 'none';
 }
