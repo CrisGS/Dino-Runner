@@ -63,17 +63,17 @@ class Obstacles {
     this.y = canvas.height - 50;
     this.w = 35;
     this.h = 50;
-    this.cactusType = Math.floor(Math.random() * (3 - 1 + 1) + 1);
+    this.cactusTypeChance = Math.random();
   }
 
   draw() {
-    if (this.cactusType === 1) {
+    if (this.cactusTypeChance < 0.50) {
       obsImg.src = 'cactus_1.png';
-    } else if (this.cactusType === 2) {
-      obsImg.src = 'cactus_2.png';
-      this.w = 60;
-    } else {
+    } else if (this.cactusTypeChance < 0.85 && this.cactusTypeChance > 0.50) {
       obsImg.src = 'cactus_3.png';
+      this.w = 60;
+    } else if (this.cactusTypeChance > 0.80) {
+      obsImg.src = 'cactus_2.png';
       this.w = 60;
     }
     ctx.drawImage(obsImg,this.x, this.y, this.w, this.h);
@@ -95,7 +95,7 @@ function generateCacti(min, max) {
   let time = Math.floor(Math.random() * (max - min + 1) + min);
   generateCactiInterval = setInterval(() => {
     obstacle = new Obstacles();
-    console.log(obstacle.cactusType)
+    console.log(obstacle.cactusTypeChance)
     cacti.push(obstacle);
     console.log(cacti);
   }, time);
