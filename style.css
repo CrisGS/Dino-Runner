@@ -24,7 +24,7 @@ body {
   position: absolute;
   width: fit-content;
   height:auto;
-  background-color: grey;
+  background-color:#4e4f4f;
   font-size: small;
   border-radius: 5px;
   border-style: hidden;
@@ -35,10 +35,11 @@ body {
 
 .replayButton {
   position: absolute;
-  top: 55%;
-  width: fit-content;
-  height:auto;
-  background-color: grey;
+  top: 50%;
+  background: url("reset.png") no-repeat center;
+  background-size: contain;
+  width: 60px;
+  height: 40px;
   font-size: small;
   border-radius: 5px;
   border-style: hidden;
