@@ -2,7 +2,7 @@ let canvas = document.getElementById("myCanvas");
 let myFont = new FontFace('myFont', 'url(PressStart2P-Regular.ttf)');
 let ctx = canvas.getContext("2d");
 const jump = new Audio('jump.mp3');
-let jumpHeight = 200;
+let jumpHeight = 180;
 let isJumping = false;
 let velocityY = 0;
 let gravity = 0.8;
@@ -16,6 +16,7 @@ const obsImg2 = new Image();
 obsImg.src = 'cactus_1.png';
 const obsImg3 = new Image();
 obsImg.src = 'cactus_1.png';
+const groundImg = new Image();
 let generateCactiInterval;
 
 
@@ -39,8 +40,8 @@ class Player {
 
   jump() {
     if (isJumping) {
-      this.y -= 5;
-      velocityY = -5;
+      this.y -= 6;
+      velocityY = -6;
       if (this.y <= canvas.height - jumpHeight) {
         isJumping = false;
       }
@@ -72,7 +73,7 @@ class Obstacles {
     } else if (this.cactusTypeChance < 0.85 && this.cactusTypeChance > 0.50) {
       obsImg.src = 'cactus_3.png';
       this.w = 60;
-    } else if (this.cactusTypeChance > 0.80) {
+    } else if (this.cactusTypeChance > 0.85) {
       obsImg.src = 'cactus_2.png';
       this.w = 60;
     }
@@ -95,9 +96,7 @@ function generateCacti(min, max) {
   let time = Math.floor(Math.random() * (max - min + 1) + min);
   generateCactiInterval = setInterval(() => {
     obstacle = new Obstacles();
-    console.log(obstacle.cactusTypeChance)
     cacti.push(obstacle);
-    console.log(cacti);
   }, time);
 }
 
@@ -109,10 +108,8 @@ class Ground {
   }
 
   drawGround() {
-    const groundImg = new Image();
     groundImg.src = 'ground.png';
     ctx.drawImage(groundImg, this.xPos, this.yPos);
-    ctx.drawImage(groundImg, this.xPos + canvas.width, this.yPos);
   }
   
   move() {
@@ -130,7 +127,7 @@ class Score {
 
   draw() {
     const scorePadded = this.score.toString().padStart(6, 0);
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = "#4e4f4f";
     ctx.font = "11px myFont";
     ctx.fillText("Score: " + scorePadded, this.x, this.y);
   }
@@ -142,18 +139,19 @@ class Score {
   }
 }
 
-document.addEventListener('keydown', function (event) {
-  if ((event.keyCode === 38 || event.keyCode === 32) && !isJumping) {
+document.addEventListener('keyup', function (event) {
+  if ((event.key === " ") && !isJumping) {
     isJumping = true;
     jump.play();
+    console.log(event.key)
   }
 });
+
 
 function addButton() {
   let replayBtn = document.createElement("button");
   replayBtn.id = "replayButton";
   replayBtn.classList.add("replayButton");
-  replayBtn.innerText = "Play again";
   replayBtn.addEventListener('click', () => {
     location.reload();
   });
@@ -181,7 +179,7 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
   } else {
     ctx.font = "30px myFont";
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = "#4e4f4f";
     ctx.textAlign="center"
     ctx.textBaseline='middle';
     ctx.fillText("Game Over!", canvas.width/ 2, (canvas.height / 2) - 30);
